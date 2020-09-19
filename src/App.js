@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
-import 'moment';
-import moment from 'moment';
+import {DateTime} from 'luxon';
 
 function App() {
   return (
@@ -15,7 +14,7 @@ class Watch extends React.Component {
   constructor() {
     super()
     this.state = {
-      time: moment()
+      time: DateTime.local()
     }
 
     
@@ -30,16 +29,20 @@ class Watch extends React.Component {
   updateTime() {
     console.log("Updating")
     this.setState({
-      time: moment()
+      time: DateTime.local()
     })
+  }
+
+  between(n,min,max) {
+    return n >= min && n <= max
   }
 
   render() {
     var t = this.state.time
-    var second = t.get('second')
+    var second = t.second
     var secondTier = second - (second%10)
 
-    var minute = t.get('minute')
+    var minute = t.minute
     var overUnder = false //OVER I
     var secondOverUnder = false
     var qualifier = false //KVART HALV
@@ -101,7 +104,7 @@ class Watch extends React.Component {
       extraMinutes = 60 - minute
     }
 
-    var hour = t.get('hour')
+    var hour = t.hour
     var hourTier = hour - (hour%10)
 
     var kardinaltal = 
