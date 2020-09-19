@@ -45,6 +45,7 @@
   font-size: 1.5em;
   color: #CCC;
   display: inline-block;
+  transition: color 0.5s;
 }
 
 .watch {

@@ -33,8 +33,27 @@ class Watch extends React.Component {
     })
   }
 
-  between(n,min,max) {
+  b(n,min,max) {
     return n >= min && n <= max
+  }
+
+  getOverUnder(m) {
+    m = m%15
+    return  this.b(m,1,7) ? "OVER" : (this.b(m,8,14) ? "I" : "")
+  }
+
+  getSecondOverUnder(m) {
+    return this.b(m,8,22) ? "OVER" : (this.b(m,38,52) ? "I" : "")
+  }
+
+  getQualifier(m) {
+    return this.b(m, 23,37) ? "HALV" : (this.b(m,8,22)||this.b(m,38,52) ? "KVART" : "")
+  }
+
+  getExtraMinutes(m) {
+    var moddedM = m%15
+    var targetMinute = [15,30,45,60].filter(n=>this.b(m,n-15,n))[0]
+    return moddedM <=7 ? m-(targetMinute-15) : targetMinute-m
   }
 
   render() {
@@ -43,67 +62,10 @@ class Watch extends React.Component {
     var secondTier = second - (second%10)
 
     var minute = t.minute
-    var overUnder = false //OVER I
-    var secondOverUnder = false
-    var qualifier = false //KVART HALV
-    var extraMinutes = 0
-    if(minute == 0){
-      console.log("do nothing")
-    }
-    else if(minute < 8 && minute > 0) {
-      overUnder = "OVER"
-      extraMinutes = minute
-    }
-    else if (minute < 15) {
-      overUnder = "I"
-      secondOverUnder = "OVER"
-      qualifier = "KVART"
-      extraMinutes = 15 - minute
-    }
-    else if (minute == 15) {
-      secondOverUnder = "OVER"
-      qualifier = "KVART"
-    }
-    else if (minute < 23) {
-      overUnder = "OVER"
-      secondOverUnder = "OVER"
-      qualifier = "KVART"
-      extraMinutes = minute - 15
-    }
-    else if (minute < 30) {
-      overUnder = "I"
-      qualifier = "HALV"
-      extraMinutes = 30 - minute
-    }
-    else if (minute == 30) {
-      qualifier = "HALV"
-    }
-    else if (minute < 38) {
-      overUnder = "OVER"
-      qualifier = "HALV"
-      extraMinutes = minute - 30
-    }
-    else if (minute < 45) {
-      overUnder = "I"
-      secondOverUnder = "I"
-      qualifier = "KVART"
-      extraMinutes = 45 - minute
-    }
-    else if (minute == 45) {
-      secondOverUnder = "I"
-      qualifier = "KVART"
-    }
-    else if (minute < 53) {
-      overUnder = "OVER"
-      secondOverUnder = "I"
-      qualifier = "KVART"
-      extraMinutes = minute - 45
-    }
-    else {
-      overUnder = "I"
-      extraMinutes = 60 - minute
-    }
-
+    var overUnder = this.getOverUnder(minute)
+    var secondOverUnder = this.getSecondOverUnder(minute)
+    var qualifier = this.getQualifier(minute)
+    var extraMinutes = this.getExtraMinutes(minute)
     var hour = t.hour
     var hourTier = hour - (hour%10)
 
