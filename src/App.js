@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import {DateTime} from 'luxon';
+import TimePicker from 'react-time-picker';
 
 function App() {
   return (
@@ -14,7 +15,8 @@ class Watch extends React.Component {
   constructor() {
     super()
     this.state = {
-      time: DateTime.local()
+      time: DateTime.local(),
+      pickedTime: null
     }
 
     
@@ -27,7 +29,6 @@ class Watch extends React.Component {
   }
 
   updateTime() {
-    console.log("Updating")
     this.setState({
       time: DateTime.local()
     })
@@ -57,7 +58,7 @@ class Watch extends React.Component {
   }
 
   render() {
-    var t = this.state.time
+    var t = (this.state.pickedTime!=null) ? DateTime.fromFormat(this.state.pickedTime, "hh:mm:ss") : this.state.time
     var second = t.second
     var secondTier = second - (second%10)
 
@@ -110,6 +111,7 @@ class Watch extends React.Component {
       )}
       <Field text = "SEKUND" callback={()=>second!=0}/>
       <Field text = "ER" callback={()=>second>1}/>
+      <TimePicker onChange={t=>this.setState({pickedTime:t})}  maxDetail="second" locale="da-DK" disableClock="true"/>
     </div>
   }
 }
